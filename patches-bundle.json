@@ -1,7 +1,7 @@
 {
- "version": "experimental-4",
- "download_url": "https://github.com/aecym-builds/aecym-patches/releases/download/bundle-4/patches-1.0.0.mpp",
- "created_at": "2026-11-21T16:49:13",
- "description": "aecym patches: experimental Muse 17.0.0.10.160 bottom tab bar. Custom color pill, tint, pink diagnostic and purple pill demo; all opt-in. New option not phone-tested.",
- "page_url": "https://github.com/aecym-builds/aecym-patches/releases/tag/bundle-4"
+ "version": "experimental-5",
+ "download_url": "https://github.com/aecym-builds/aecym-patches/releases/download/bundle-5/patches-1.0.0.mpp",
+ "created_at": "2026-11-21T17:07:35",
+ "description": "aecym patches: experimental Muse 17.0.0.10.160 bottom tab bar. Custom color moving-lens prototype plus tint, pink and purple demos; all opt-in. No real blur/refraction. Motion not phone-tested; bundle-4 fallback.",
+ "page_url": "https://github.com/aecym-builds/aecym-patches/releases/tag/bundle-5"
 }

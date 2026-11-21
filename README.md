@@ -1,6 +1,14 @@
 # Muse Glass Navbar
 
-Experimental Morphe patch source for Muse from Meta. **Not compiled, not applied to an APK, and not tested on a device.** No installable `.mpp` bundle is provided yet. This repository link is not a Morphe patch-source URL.
+Experimental Morphe patch source for Muse from Meta. **Compiled successfully with GitHub Actions. Not applied to an APK or tested on a device.**
+
+## Download on your phone
+
+1. Download [patches-1.0.0.mpp](https://github.com/aecym-builds/muse-glass-navbar/releases/download/experimental-1/patches-1.0.0.mpp) from the [experimental release](https://github.com/aecym-builds/muse-glass-navbar/releases/tag/experimental-1). No PC is needed for this download.
+2. Import the downloaded `.mpp` as a local bundle in a compatible Morphe Manager/CLI. The repository homepage is not a Morphe patch-source URL.
+3. Use your own original Muse `17.0.0.10.160` APK, select the experimental translucent bottom tab bar patch, and back up app data before installing a patched APK.
+
+[Successful cloud build](https://github.com/aecym-builds/muse-glass-navbar/actions/runs/44918819343). Bundle SHA-256: `5267f174707028b5eff441dfddceb53bc90daadeed263dcc6756efd33ece2869`. Compilation is verified, runtime behavior and appearance are not.
 
 ## Intended change
 
@@ -31,7 +39,7 @@ chmod +x gradlew
 
 Expected output after a successful build: `patches/build/libs/patches-*.mpp`. A raw Kotlin file cannot be loaded as a compiled patch bundle.
 
-This project follows the official Morphe patches template: settings plugin `2.1.1`, patcher catalog `2.5.0`, and its checked-in Gradle wrapper. The initial local attempt stopped at plugin resolution before compiling Kotlin. Package authentication is configured by the template; an authenticated build has not been verified here. Build or API fixes may still be needed.
+This project follows the official Morphe patches template: settings plugin `2.1.1`, patcher catalog `2.5.0`, and its checked-in Gradle wrapper. The initial local attempt stopped at plugin resolution before compiling Kotlin. The subsequent GitHub Actions build succeeded using its built-in package-read token. The release bundle was downloaded and its archive integrity and patch manifest were checked. The source ZIP preserves the initial source-only notes; this README records the newer build result.
 
 ## Testing checklist
 

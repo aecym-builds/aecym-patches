@@ -1,0 +1,101 @@
+name: Build bundle 3 (tint, pink diagnostic, purple pill demo)
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/bundle-3.yml'
+permissions:
+  contents: write
+  packages: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Extract source project
+        run: unzip -q 3-muse-glass-navbar-source.zip -d build-source
+      - name: Add pink diagnostic and purple pill demo as separate opt-in patches
+        run: |
+          python3 - <<'PY'
+          import os, re, subprocess
+          p = subprocess.check_output(['find', 'build-source', '-name', 'TranslucentNavBarPatch.kt']).decode().split()[0]
+          orig = open(p).read()
+          d = os.path.dirname(p)
+          def rename(s, tag):
+              for a, b in [
+                  (r'\bNAV\b', tag.upper() + '_NAV'), (r'\bHELPER\b', tag.upper() + '_HELPER'), (r'\bCLONE\b', tag.upper() + '_CLONE'),
+                  (r'\bNavBar\b', tag + 'NavBar'), (r'\bBackground\b', tag + 'Background'),
+                  (r'museTranslucentNavBar', 'muse' + tag + 'NavBar'),
+              ]:
+                  s, n = re.subn(a, b, s)
+                  assert n >= 1, a
+              return s
+          asm = re.compile(r'const v0, 0x3f19999a\s+invoke-static \{v1, v2, v0\}, LX/AH4;->A04\(JF\)J\s+move-result-wide v1')
+          # 1) pink diagnostic
+          s = rename(orig, 'Pink')
+          s, n = asm.subn('const-wide v1, 0xFFFF149300000000L', s); assert n == 1, n
+          s, n = re.subn(r'aecymNavTint60', 'aecymNavPink', s); assert n >= 1
+          s, n = re.subn(r'name = "Translucent bottom tab bar \(experimental\)"', 'name = "DIAGNOSTIC pink bottom tab bar (test only)"', s); assert n == 1
+          s, n = re.subn(r'description = "[^"]*"', 'description = "Test only. Paints the bottom tab bar solid pink. Choose one bottom-bar patch only."', s, count=1); assert n == 1
+          open(os.path.join(d, 'PinkDiagnosticNavBarPatch.kt'), 'w').write(s)
+          # 2) purple floating pill demo: clone body starts with margins, pill shape, violet fill, then returns
+          pill = (
+              'const/high16 v0, 0x41800000\n'
+              'const/4 v1, 0x0\n'
+              'const/high16 p0, 0x40c00000\n'
+              'invoke-static {p1, v0, v1, v0, p0}, LX/9QZ;->A05(LX/9Tt;FFFF)LX/9Tt;\n'
+              'move-result-object p1\n'
+              'sget-object v0, LX/1Ov;->A00:LX/1Ov;\n'
+              'const-wide v1, 0xD98A5CE000000000L\n'
+              'invoke-static {p1, v0, v1, p0}, LX/1aV;->A02(LX/9Tt;LX/1pj;J)LX/9Tt;\n'
+              'move-result-object v0\n'
+              'return-object v0\n'
+          )
+          s = rename(orig, 'Pill')
+          s, n = asm.subn(lambda m: pill, s); assert n == 1, n
+          s, n = re.subn(r'tinted\.addInstructions\(\s*colorIndex \+ 1,', 'tinted.addInstructions(\n 0,', s); assert n == 1, n
+          s, n = re.subn(r'aecymNavTint60', 'aecymNavPill', s); assert n >= 1
+          s, n = re.subn(r'name = "Translucent bottom tab bar \(experimental\)"', 'name = "DEMO purple floating pill bottom tab bar (experimental)"', s); assert n == 1
+          s, n = re.subn(r'description = "[^"]*"', 'description = "Demo. Inset rounded violet translucent bottom tab bar. No blur, no rim. Choose one bottom-bar patch only. Untested on a device."', s, count=1); assert n == 1
+          open(os.path.join(d, 'PillDemoNavBarPatch.kt'), 'w').write(s)
+          print('ok')
+          PY
+      - name: Build Android-compatible bundle
+        working-directory: build-source/muse-glass-navbar
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          chmod +x gradlew
+          ./gradlew :patches:buildAndroid --no-daemon --stacktrace
+      - name: Verify bundle exists
+        run: |
+          find build-source/muse-glass-navbar/patches/build/libs -name '*.mpp' -type f -print
+          test "$(find build-source/muse-glass-navbar/patches/build/libs -name '*.mpp' -type f | wc -l)" -eq 1
+      - name: Publish release and point the existing source at it
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cp build-source/muse-glass-navbar/patches/build/libs/*.mpp /tmp/patches-1.0.0.mpp
+          gh release create bundle-3 /tmp/patches-1.0.0.mpp --prerelease --title "Bundle 3: tint, pink diagnostic, purple pill demo" --notes 'Muse 17.0.0.10.160 only. Three opt-in bottom tab bar patches, all off by default. Choose only one. The purple pill is a demo (inset, rounded, violet translucent fill, no blur, no rim). Not device-tested.'
+          python3 - <<'PY'
+          import json, datetime
+          d = {
+              "version": "experimental-3",
+              "download_url": "https://github.com/aecym-builds/aecym-patches/releases/download/bundle-3/patches-1.0.0.mpp",
+              "created_at": datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S'),
+              "description": "aecym patches: experimental Muse 17.0.0.10.160 bottom tab bar. Tint, pink diagnostic and a purple pill demo, all opt-in. Not device-tested.",
+              "page_url": "https://github.com/aecym-builds/aecym-patches/releases/tag/bundle-3",
+          }
+          open('patches-bundle.json', 'w').write(json.dumps(d, indent=1) + '\n')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add patches-bundle.json
+          git commit -m "Point bundle at bundle-3 (tint, pink diagnostic, purple pill demo)"
+          git push origin HEAD:main

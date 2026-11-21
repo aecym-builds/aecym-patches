@@ -17,9 +17,9 @@ The code has version-specific fingerprints and structural checks. Other versions
 
 ## Read or build
 
-`TranslucentNavBarPatch.kt` is a convenient readable copy. `muse-glass-navbar-source.zip` contains the complete Gradle project; the authoritative source inside it is `patches/src/main/kotlin/app/aecym/muse/TranslucentNavBarPatch.kt`.
+[`2-TranslucentNavBarPatch.kt`](2-TranslucentNavBarPatch.kt) is a convenient readable copy. [`3-muse-glass-navbar-source.zip`](3-muse-glass-navbar-source.zip) contains the complete Gradle project; the authoritative source inside it is `patches/src/main/kotlin/app/aecym/muse/TranslucentNavBarPatch.kt`.
 
-1. Download and unzip `muse-glass-navbar-source.zip`.
+1. Download and unzip `3-muse-glass-navbar-source.zip`.
 2. Install JDK 21 and set `JAVA_HOME` to it.
 3. GitHub Packages access is required by the official Morphe build configuration. Set `GITHUB_ACTOR` to your GitHub username and `GITHUB_TOKEN` to a token with `read:packages` permission, using your local secret manager or environment. Never commit a token. The equivalent Gradle properties are `gpr.user` and `gpr.key` in your private user Gradle configuration, not this project.
 4. In the extracted project, run:
@@ -41,6 +41,6 @@ Patching changes the APK signature. Installing over the official app may fail or
 
 ## Provenance and license
 
-Build scaffolding comes from [MorpheApp/morphe-patches-template](https://github.com/MorpheApp/morphe-patches-template). See LICENSE and NOTICE for the GPL-3.0 license and upstream notices. The patch is original source and contains no APK, decompiled app implementation, or smali dump. Runtime helper code is copied only from the user's own APK during patch execution.
+Build scaffolding comes from [MorpheApp/morphe-patches-template](https://github.com/MorpheApp/morphe-patches-template). See [LICENSE](4-LICENSE) and [NOTICE](5-NOTICE) for the GPL-3.0 license and upstream notices. The patch is original source and contains no APK, decompiled app implementation, or smali dump. Runtime helper code is copied only from the user's own APK during patch execution.
 
 Not affiliated with Meta or Morphe.

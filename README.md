@@ -1,14 +1,26 @@
-# Muse Glass Navbar
+# aecym patches
 
 Experimental Morphe patch source for Muse from Meta. **Compiled successfully with GitHub Actions. Not applied to an APK or tested on a device.**
 
+## Add to Morphe Manager
+
+[Open in Morphe Manager](https://morphe.software/add-source?github=aecym-builds/aecym-patches&name=aecym%20patches)
+
+Or open Sources > + > Remote and paste:
+
+`https://github.com/aecym-builds/aecym-patches`
+
+This repository now provides `patches-bundle.json` pointing to the existing experimental bundle. Confirm Add in Morphe. The source currently offers only this experimental Muse patch, not a stable or phone-tested release. End-to-end import on a phone remains unverified.
+
+If your Manager version cannot use the link, use the local download below.
+
 ## Download on your phone
 
-1. Download [patches-1.0.0.mpp](https://github.com/aecym-builds/muse-glass-navbar/releases/download/experimental-1/patches-1.0.0.mpp) from the [experimental release](https://github.com/aecym-builds/muse-glass-navbar/releases/tag/experimental-1). No PC is needed for this download.
-2. Import the downloaded `.mpp` as a local bundle in a compatible Morphe Manager/CLI. The repository homepage is not a Morphe patch-source URL.
+1. Download [patches-1.0.0.mpp](https://github.com/aecym-builds/aecym-patches/releases/download/experimental-1/patches-1.0.0.mpp) from the [experimental release](https://github.com/aecym-builds/aecym-patches/releases/tag/experimental-1). No PC is needed for this download.
+2. Import the downloaded `.mpp` as a local bundle in a compatible Morphe Manager/CLI. 
 3. Use your own original Muse `17.0.0.10.160` APK, select the experimental translucent bottom tab bar patch, and back up app data before installing a patched APK.
 
-[Successful cloud build](https://github.com/aecym-builds/muse-glass-navbar/actions/runs/44918819343). Bundle SHA-256: `5267f174707028b5eff441dfddceb53bc90daadeed263dcc6756efd33ece2869`. Compilation is verified, runtime behavior and appearance are not.
+[Successful cloud build](https://github.com/aecym-builds/aecym-patches/actions/runs/44918819343). Bundle SHA-256: `5267f174707028b5eff441dfddceb53bc90daadeed263dcc6756efd33ece2869`. Compilation is verified, runtime behavior and appearance are not.
 
 ## Intended change
 

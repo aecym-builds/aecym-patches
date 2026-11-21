@@ -1,0 +1,45 @@
+name: Build experimental patch
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/build.yml'
+      - '3-muse-glass-navbar-source.zip'
+permissions:
+  contents: write
+  packages: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Extract source project
+        run: unzip -q 3-muse-glass-navbar-source.zip -d build-source
+      - name: Build Android-compatible bundle
+        working-directory: build-source/muse-glass-navbar
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          chmod +x gradlew
+          ./gradlew :patches:buildAndroid --no-daemon --stacktrace
+      - name: Verify bundle exists
+        run: |
+          find build-source/muse-glass-navbar/patches/build/libs -name '*.mpp' -type f -print
+          test "$(find build-source/muse-glass-navbar/patches/build/libs -name '*.mpp' -type f | wc -l)" -eq 1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: muse-experimental-patch
+          path: build-source/muse-glass-navbar/patches/build/libs/*.mpp
+          if-no-files-found: error
+      - name: Publish experimental release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="experimental-${GITHUB_RUN_NUMBER}"
+          gh release create "$TAG" build-source/muse-glass-navbar/patches/build/libs/*.mpp --prerelease --title "Experimental tint patch ${GITHUB_RUN_NUMBER}" --notes 'Compiled Morphe bundle for Muse 17.0.0.10.160 only. Changes bottom tab bar tint to 60% opacity, not blur. Not applied to an APK or tested on a device. Back up app data before use. No Muse APK is included.'

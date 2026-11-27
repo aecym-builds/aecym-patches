@@ -68,11 +68,11 @@ open('MovingLens.java','w').write(j)
 print(sorted(set(re.findall(r'X\.[0-9A-Za-z]{2,4}\b',j))))
 
 r=open('README.md').read()
-assert r.count('17.0.0.10.160')>=1
-r=r.replace('17.0.0.10.160','17.1.0.28.160')
 old="This implementation was tried on one user's phone."
-assert old in r
-r=r.replace(old,"The earlier 17.0.0.10.160 version of this implementation was tried on one user's phone. This 17.1.0.28.160 port is statically checked against the app but not yet device-tested.")
-r=r.replace('Recordings show the rounded bar','Recordings of the earlier version show the rounded bar')
-r+='\nFor Muse 17.0.0.10.160 use the older bundle-7 release.\n'
-open('README.md','w').write(r)
+# The README now covers more than the navbar patch, so only rewrite the old wording when present.
+if '17.0.0.10.160' in r and old in r:
+    r=r.replace('17.0.0.10.160','17.1.0.28.160')
+    r=r.replace(old,"The earlier 17.0.0.10.160 version of this implementation was tried on one user's phone. This 17.1.0.28.160 port is statically checked against the app but not yet device-tested.")
+    r=r.replace('Recordings show the rounded bar','Recordings of the earlier version show the rounded bar')
+    r+='\nFor Muse 17.0.0.10.160 use the older bundle-7 release.\n'
+    open('README.md','w').write(r)

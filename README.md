@@ -9,11 +9,14 @@ Muse already contains a full multi-account implementation: parked credentials, a
 stored-token switch. It is disabled by three MobileConfig flags. This patch forces the gate that
 reads those flags to report enabled, so the existing feature turns on instead of being rebuilt.
 
-How to use it:
+Two ways in:
 
-1. Open the side panel (leading menu button in the tab header, or edge swipe).
-2. Tap your name/avatar at the top of the panel. The account menu expands.
-3. Tap another account to switch. **Add account** logs in to a new account and parks the current one.
+- **Profile:** open the side panel (leading menu button in the tab header, or edge swipe) and tap your
+  name/avatar at the top. The account menu expands.
+- **Settings:** open Settings and look at the Accounts card. Its first row is the same account menu;
+  tap it to expand the list.
+
+Tap another account to switch. **Add account** logs in to a new account and parks the current one.
 
 Switching goes through the app's own `AuraAccounts.switchTo(userId)`, which leaves the current
 session, exchanges the stored token and continues the login. It is not two sessions running at once:
@@ -27,8 +30,9 @@ Caveats:
   the current session is kept. That cannot be fixed client-side.
 - Statically verified against 18.0.0.8.161 and applied cleanly with Morphe 2.4.0, but not yet
   device-tested.
-- There is no separate entry in the Settings screen. Muse's only switcher UI is the side-panel
-  account header; Settings only links to the web Accounts Center.
+- Muse has no switcher screen of its own in Settings, so the patch adds the existing account menu as a
+  row of the Accounts card there. It is the same composable the side-panel header uses, not a new
+  screen; if it ever misbehaves, use the side-panel entry.
 
 ## Floating bottom bar — Muse 17.1.0.28.160
 

@@ -13,8 +13,8 @@ Two ways in:
 
 - **Profile:** open the side panel (leading menu button in the tab header, or edge swipe) and tap your
   name/avatar at the top. The account menu expands.
-- **Settings:** open Settings and look at the Accounts card. Its first row is the same account menu;
-  tap it to expand the list.
+- **Settings:** open Settings and look at the Accounts card. It has an extra row that is the same
+  account menu; tap it to expand the list.
 
 Tap another account to switch. **Add account** logs in to a new account and parks the current one.
 

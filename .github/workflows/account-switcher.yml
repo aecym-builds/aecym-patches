@@ -1,0 +1,68 @@
+name: Build account switcher bundle
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'AccountSwitcherPatch.kt'
+      - '.github/workflows/account-switcher.yml'
+permissions:
+  contents: write
+  packages: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Extract source project
+        run: unzip -q 3-muse-glass-navbar-source.zip -d build-source
+      - name: Add account switcher patch
+        run: |
+          DEST=build-source/muse-glass-navbar/patches/src/main/kotlin/app/aecym/muse
+          cp AccountSwitcherPatch.kt "$DEST/AccountSwitcherPatch.kt"
+          # The draft navbar patch targets 17.0.0.10.160; keep this bundle to the switcher only.
+          rm -f "$DEST/TranslucentNavBarPatch.kt"
+          ls -l "$DEST"
+      - name: Brand bundle
+        run: |
+          python3 - <<'PY'
+          p = 'build-source/muse-glass-navbar/patches/build.gradle.kts'
+          s = open(p).read()
+          s = s.replace('name = "Muse Glass Navbar"', 'name = "Aecym Patches"')
+          s = s.replace(
+              'description = "Experimental bottom tab bar tint for Muse"',
+              'description = "Account switcher for Muse"',
+          )
+          open(p, 'w').write(s)
+          assert 'name = "Aecym Patches"' in s
+          PY
+      - name: Build Android-compatible bundle
+        working-directory: build-source/muse-glass-navbar
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          chmod +x gradlew
+          ./gradlew :patches:buildAndroid --no-daemon --stacktrace
+      - name: Verify bundle exists
+        run: |
+          find build-source/muse-glass-navbar/patches/build/libs -name '*.mpp' -type f -print
+          test "$(find build-source/muse-glass-navbar/patches/build/libs -name '*.mpp' -type f | wc -l)" -eq 1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: account-switcher-bundle
+          path: build-source/muse-glass-navbar/patches/build/libs/*.mpp
+          if-no-files-found: error
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="account-switcher-${GITHUB_RUN_NUMBER}"
+          gh release create "$TAG" build-source/muse-glass-navbar/patches/build/libs/*.mpp \
+            --prerelease \
+            --title "Account switcher bundle ${GITHUB_RUN_NUMBER}" \
+            --notes 'Morphe bundle for Muse 18.0.0.8.161 (com.facebook.aura). Forces the retained-account login gate open so the side-panel account menu lists parked accounts and switching uses the stored-token path. Client-side only; not device-tested. No Muse APK is included.'

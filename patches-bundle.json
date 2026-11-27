@@ -1,7 +1,7 @@
 {
  "version": "1.0.9",
  "download_url": "https://github.com/aecym-builds/aecym-patches/releases/download/bundle-9/patches-1.0.0.mpp",
- "created_at": "2026-11-27T22:01:49",
+ "created_at": "2026-11-27T22:07:10",
  "description": "Aecym Patches: account switcher for Muse 18.0.0.8.161, plus custom-colour floating bottom bar for 17.1.0.28.160. Animated bubble with grab-and-drag selection. Not yet device-tested on 17.1. No true backdrop blur.",
  "page_url": "https://github.com/aecym-builds/aecym-patches/releases/tag/bundle-9"
 }

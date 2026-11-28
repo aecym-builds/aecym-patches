@@ -57,3 +57,17 @@ already consults.
 ## License
 
 GPLv3. See LICENSE and NOTICE files and the included source archive.
+
+## Block NSFW content: Reddit 2026.47.0
+
+Hides NSFW posts in Reddit's feeds, keeps "Show mature content" off (also on the account), turns on
+safe search and NSFW image blurring, and removes those options from settings. It has no off switch
+inside the app. Meant for parental control and for people who never want NSFW on Reddit.
+
+This is a port of [warleysr/reddit-nsfw-blocker](https://github.com/warleysr/reddit-nsfw-blocker)
+v1.2.0 (GPLv3, based on Morphe Patches) with Reddit 2026.47.0 added as a target. Credit and the
+upstream NOTICE are kept in `reddit/`. It uses its own extension, so it can be selected together with
+the official Morphe Reddit patches.
+
+Not device-tested. Every fingerprint anchor was checked against the 2026.47.0 APK's code, but the
+patcher itself has not been run on it.

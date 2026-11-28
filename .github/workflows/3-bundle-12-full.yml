@@ -221,15 +221,15 @@ jobs:
           if gh release view bundle-12 >/dev/null 2>&1; then
             gh release upload bundle-12 /tmp/patches-1.0.0.mpp --clobber
           else
-          gh release create bundle-12 /tmp/patches-1.0.0.mpp --title "Aecym Patches 12" --notes "Adds Block NSFW content for Reddit 2026.47.0 (ported from warleysr/reddit-nsfw-blocker v1.2.0, GPLv3). Muse patches unchanged from bundle 10. The Reddit port is statically checked against the 2026.47.0 APK, not device-tested. Historic bundles remain available."
+          gh release create bundle-12 /tmp/patches-1.0.0.mpp --title "Aecym Patches 12" --notes "Adds Block NSFW content for Reddit 2026.47.0 (ported from warleysr/reddit-nsfw-blocker v1.2.0, GPLv3). Muse account switcher 1.0.13 fixes the Settings crash: the injected menu now gets a real content row. The Reddit port is statically checked against the 2026.47.0 APK, not device-tested. Historic bundles remain available."
           fi
           python3 - <<'PY'
           import json, datetime
           d = {
-              "version": "1.0.12",
+              "version": "1.0.13",
               "download_url": "https://github.com/aecym-builds/aecym-patches/releases/download/bundle-12/patches-1.0.0.mpp",
               "created_at": datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S'),
-              "description": "Aecym Patches: Muse account switcher (18.0.0.8.161) and floating bottom bar (17.1.0.28.160), plus Block NSFW content for Reddit 2026.47.0 (port of warleysr/reddit-nsfw-blocker, not device-tested). No true backdrop blur.",
+              "description": "Aecym Patches: Muse account switcher (18.0.0.8.161) and floating bottom bar (17.1.0.28.160), plus Block NSFW content for Reddit 2026.47.0 (port of warleysr/reddit-nsfw-blocker, not device-tested). 1.0.13 fixes the Settings crash by giving the injected account menu a real content row. No true backdrop blur.",
               "page_url": "https://github.com/aecym-builds/aecym-patches/releases/tag/bundle-12",
           }
           open('patches-bundle.json', 'w').write(json.dumps(d, indent=1) + '\n')
@@ -237,5 +237,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add patches-bundle.json README.md
-          git commit -m "Publish Aecym Patches 12 with the Reddit NSFW blocker"
+          git commit -m "Publish Aecym Patches 12 with the fixed settings entry"
           git push origin HEAD:main

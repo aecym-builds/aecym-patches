@@ -30,8 +30,6 @@ Caveats:
   the current session is kept. That cannot be fixed client-side.
 - Statically verified against 18.0.0.8.161 and applied cleanly with Morphe 2.4.0, but not yet
   device-tested.
-- Bundle 1.0.13 fixed a crash on opening Settings: the injected account-menu row now gets a real
-  content composable instead of a null one. The side-panel entry is unchanged.
 - Muse has no switcher screen of its own in Settings, so the patch adds the existing account menu as a
   row of the Accounts card there. It is the same composable the side-panel header uses, not a new
   screen; if it ever misbehaves, use the side-panel entry.
